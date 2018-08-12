@@ -51,16 +51,25 @@ public class HotelController : MonoBehaviourSingleton<HotelController> {
 
         this.hotel = new Hotel(10);
 
-        LiftController.Instance.SetLiftPositionFromFloor(hotel.lifts[0], hotel.lifts[0].currentFloor);
-        LiftController.Instance.SetLiftPositionFromFloor(hotel.lifts[1], hotel.lifts[1].currentFloor);
-        LiftController.Instance.SetLiftPositionFromFloor(hotel.lifts[2], hotel.lifts[2].currentFloor);
+        // LiftController.Instance.SetLiftPositionFromFloor(hotel.lifts[0], hotel.lifts[0].currentFloor);
+        //  LiftController.Instance.SetLiftPositionFromFloor(hotel.lifts[1], hotel.lifts[1].currentFloor);
+        //  LiftController.Instance.SetLiftPositionFromFloor(hotel.lifts[2], hotel.lifts[2].currentFloor);
 
 
-        LiftController.Instance.TestLift(0, Random.Range(0, 9));
-        LiftController.Instance.TestLift(1, Random.Range(0, 9));
-        LiftController.Instance.TestLift(2, Random.Range(0, 9));
+        // LiftController.Instance.TestLift(0, Random.Range(0, 9));
+        // LiftController.Instance.TestLift(1, Random.Range(0, 9));
+        // LiftController.Instance.TestLift(2, Random.Range(0, 9));
+
+        for (int i = 0; i < 12; i++) {
+         //   GuestController.Instance.SpawnGuest();
+        }
+
+
 
         ShowCorrectFloor();
+        GuestController.Instance.SpawnGuest(0);
+        hotel.lifts[0].doorsOpening = true;
+        GuestController.Instance.gameActive = true;
 
 
     }
@@ -68,11 +77,32 @@ public class HotelController : MonoBehaviourSingleton<HotelController> {
     // Update is called once per frame
     void Update() {
 
-        int currentFloor = CheckUpDown();
-        CheckLeftRight();
+		if (GuestController.Instance.gameActive) {
 
-        //   int currentFloor = Mathf.RoundToInt((Camera.main.transform.position.y - 3.3f));
+			int currentFloor = CheckUpDown ();
 
+			CheckLeftRight ();
+
+			//   int currentFloor = Mathf.RoundToInt((Camera.main.transform.position.y - 3.3f));
+
+			CheckFloorChanged (currentFloor);
+
+			if (currentFloor != floorBeingViewed) {
+
+
+				floorBeingViewed = currentFloor;
+				ShowCorrectFloor ();
+			}
+
+		}
+
+
+    }
+
+
+	void CheckFloorChanged (int currentFloor) {
+
+		
         if (currentFloor != floorBeingViewed) {
 
 
@@ -81,7 +111,37 @@ public class HotelController : MonoBehaviourSingleton<HotelController> {
         }
 
 
-    }
+	}
+
+
+	public Lift GetCurrentLift () {
+
+		return hotel.lifts [liftBeingControlled];
+
+
+	}
+
+	public Floor GetFloor (int floorID) {
+
+		return hotel.floors [floorID];
+
+
+
+	}
+
+	public GameObject GetFloorGameObject (int floorID) {
+
+		return floorGameObjects [floorID];
+
+
+	}
+
+	public FloorObject GetFloorObject (int floorID) {
+
+		return floorToGameObjectMap [GetFloor (floorID)].GetComponent<FloorObject> ();
+
+
+	}
 
    void CheckLeftRight() {
 
@@ -89,13 +149,16 @@ public class HotelController : MonoBehaviourSingleton<HotelController> {
 
             liftBeingControlled -= 1;
             selectionCylinder.MoveCylinder(-1);
-
+			LiftController.Instance.liftSelectedText.text = "Lift " + (liftBeingControlled + 1).ToString ();
+            LiftController.Instance.UpdateLiftButtonLights();
         }
 
         if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.W)) && liftBeingControlled < 2) {
 
             liftBeingControlled += 1;
             selectionCylinder.MoveCylinder(+1);
+            LiftController.Instance.liftSelectedText.text = "Lift " + (liftBeingControlled + 1).ToString ();
+            LiftController.Instance.UpdateLiftButtonLights();
         }
 
     }
@@ -117,7 +180,15 @@ public class HotelController : MonoBehaviourSingleton<HotelController> {
 
     }
 
-    void ShowCorrectFloor() {
+	public void OnClickFloorButton (int id) {
+
+		if (GuestController.Instance.gameActive) {
+			CheckFloorChanged (id);
+		}
+		
+	}
+
+    public void ShowCorrectFloor() {
 
         foreach(GameObject floorGO in floorGameObjects) {
 
