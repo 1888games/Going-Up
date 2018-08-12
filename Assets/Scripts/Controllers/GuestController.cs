@@ -169,7 +169,9 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 				HotelController.Instance.hotel.lifts [i].goingUp = false;
 				HotelController.Instance.hotel.lifts [i].goingDown = false;
 				HotelController.Instance.hotel.lifts [i].liftOpenTimer = 0f;
-			
+
+				LiftController.Instance.SetLiftPositionFromFloor (HotelController.Instance.hotel.lifts [i], 0);
+				
 
 				for (int y = 0; y < 10; y++) {
 
