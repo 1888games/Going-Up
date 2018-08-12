@@ -43,7 +43,14 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 
 	public bool restarted = false;
 
+	public GameObject tutorial;
+	public TextMeshProUGUI tutorialText;
+
 	public GameObject gameOverScreen;
+
+	public bool clickTextDone = false;
+	public bool liftTextDone = false;
+	public bool closeTextDone = false;
 	
 	
 
@@ -77,6 +84,8 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
         liftSlotPositions.Add(new Vector2(-0.2f, 2.15f));
         liftSlotPositions.Add(new Vector2(0.2f, 2.15f));
 
+		tutorial.SetActive (true);
+
     }
 
 
@@ -106,11 +115,9 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 
 			foreach (GameObject guestGO in guestGameObjects) {
 				
-					gameObjectToGuestMap.Remove (guestGO);
+				gameObjectToGuestMap.Remove (guestGO);
 				SimplePool.Despawn (guestGO);
 			
-
-
 			}
 
 		}
@@ -174,12 +181,14 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 					HotelController.Instance.hotel.lifts [i].slots [z] = null;
 				}
 
-				HotelController.Instance.ShowCorrectFloor ();
-        		SpawnGuest(0);
-        		HotelController.Instance.hotel.lifts[0].doorsOpening = true;
+			
 
 
 			}
+			
+		HotelController.Instance.ShowCorrectFloor ();
+		SpawnGuest(0);
+		HotelController.Instance.hotel.lifts[0].doorsOpening = true;
 
 			
        	 gameActive = true;
@@ -211,9 +220,9 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 
 		currentScore += score;
 
-		if (score > highScore) {
+		if (currentScore > highScore) {
 
-			highScore = score;
+			highScore = currentScore;
 	
 		}
 
@@ -316,7 +325,10 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 
             Debug.Log("CLICKED ON GUEST: " + guest.currentFloor + " " + guest.patience);
 
-
+			if (clickTextDone == false) {
+				clickTextDone = true;
+				tutorialText.text = "SELECT GUEST'S REQUESTED FLOOR";
+			}
 
             for (int i = 0; i < 6; i++) {
 
@@ -431,6 +443,8 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 
 		gameOverScreen.SetActive (true);
 
+		PlayerPrefs.SetInt ("High", highScore);
+
 	}
 
     public void DestroyGuest(GameObject guestGO, Guest guest) {
@@ -479,7 +493,7 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
         int targetFloor = currentFloor;
         float maxWaitingTime = Random.Range(50f, 120f);
         
-        maxWaitingTime = Random.Range(1, 2f);
+       // maxWaitingTime = Random.Range(1, 2f);
         
         
         while (targetFloor == currentFloor) {

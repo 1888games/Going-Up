@@ -2003,7 +2003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RandomVolume: 0
-  MinVolume: 0.973
+  MinVolume: 0.686
   MaxVolume: 1
   RandomizeDelay: 0
   InitialDelayMin: 0

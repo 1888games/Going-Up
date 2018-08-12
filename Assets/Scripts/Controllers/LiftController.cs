@@ -85,6 +85,12 @@ public class LiftController : MonoBehaviourSingleton<LiftController> {
 	            if (lift.currentFloor != i) {
 	                lift.liftButtonsPressed[i] = !lift.liftButtonsPressed[i];
 	                UpdateLiftButtonLight(lift, i);
+	                
+	                
+					if (GuestController.Instance.liftTextDone == false) {
+						GuestController.Instance.liftTextDone = true;
+						GuestController.Instance.tutorialText.text = "CLOSE LIFT DOOR TO SEND TO REQUESTED FLOORS";
+					}
 	            }
 
 		         
@@ -98,6 +104,12 @@ public class LiftController : MonoBehaviourSingleton<LiftController> {
             if (lift.currentFloor != 0) {
                 lift.liftButtonsPressed[0] = !lift.liftButtonsPressed[0];
                 UpdateLiftButtonLight(lift, 0);
+                
+                if (GuestController.Instance.liftTextDone == false) {
+						GuestController.Instance.liftTextDone = true;
+						GuestController.Instance.tutorialText.text = "CLOSE LIFT DOOR TO SEND TO REQUESTED FLOORS";
+				}
+					
             }
 
 
@@ -181,6 +193,11 @@ public class LiftController : MonoBehaviourSingleton<LiftController> {
                 lift.doorsOpening = false;
                 lift.doorsOpen = false;
 			SoundController.Instance.Doors ();
+			
+			 if (GuestController.Instance.closeTextDone == false && GuestController.Instance.clickTextDone && GuestController.Instance.liftTextDone) {
+						GuestController.Instance.closeTextDone = true;
+						GuestController.Instance.tutorial.SetActive (false);
+				}
                
         }
 
@@ -190,6 +207,9 @@ public class LiftController : MonoBehaviourSingleton<LiftController> {
             lift.doorsClosing = false;
             lift.doorsClosed = false;
             SoundController.Instance.Doors ();
+            
+             
+					
         }
 
 	}
@@ -214,6 +234,13 @@ public class LiftController : MonoBehaviourSingleton<LiftController> {
 				lift.doorsClosing = true;
 				lift.doorsOpening = false;
 				 SoundController.Instance.Doors ();
+				 
+				 if (GuestController.Instance.closeTextDone == false && GuestController.Instance.clickTextDone && GuestController.Instance.liftTextDone) {
+						GuestController.Instance.closeTextDone = true;
+						GuestController.Instance.tutorial.SetActive (false);
+				}
+				 
+				 
 				return;
 			}
 
@@ -224,7 +251,14 @@ public class LiftController : MonoBehaviourSingleton<LiftController> {
 				if (lift.currentFloor != buttonPressed) {
 					lift.liftButtonsPressed [buttonPressed] = !lift.liftButtonsPressed [buttonPressed];
 					UpdateLiftButtonLight (lift, buttonPressed);
+					
+					if (GuestController.Instance.liftTextDone == false && GuestController.Instance.clickTextDone) {
+						GuestController.Instance.liftTextDone = true;
+						GuestController.Instance.tutorialText.text = "CLOSE LIFT DOOR TO SEND TO REQUESTED FLOORS";
+					}
 				}
+				
+				
 
 				Debug.Log ("Button pressed: " + button);
 
