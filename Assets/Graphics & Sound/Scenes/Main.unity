@@ -3256,7 +3256,7 @@ MonoBehaviour:
   maxSpawnGap: 10
   spawnGap: 10
   spawnTimer: 0
-  spawnReduce: 0.25
+  spawnReduce: 0.5
   minSpawnGap: 3
   gameActive: 0
   currentScoreText: {fileID: 663005954}
