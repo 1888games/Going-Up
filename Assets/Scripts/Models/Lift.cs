@@ -30,6 +30,8 @@ public class Lift {
 	public float liftOpenTimer = 0f;
 	float liftOpenTimeout = 6f;
 
+	public float arrivedOnFloorTimer = 0f;
+
     bool displaySetup = false;
 
     public Dictionary<int, Guest> slots;
@@ -62,6 +64,8 @@ public class Lift {
 
 	public void ManageLift () {
 
+		arrivedOnFloorTimer -= Time.deltaTime;
+
 		if (GuestController.Instance.gameActive) {
 
 			if (displaySetup == false) {
@@ -70,7 +74,7 @@ public class Lift {
 				LiftController.Instance.UpdateLiftArrows (this);
 			}
 
-			if (doorsClosed) {
+			if (doorsClosed && arrivedOnFloorTimer <= 0f) {
 
 				if (Mathf.Abs (distanceToTargetFloor) > 0f) {
 					if (currentFloor != targetFloor) {
@@ -96,7 +100,7 @@ public class Lift {
 
 				if (liftOpenTimer >= liftOpenTimeout) {
 
-					CalculateTargetFloor ();
+					CalculateTargetFloor (true);
 
 					if (targetFloor != currentFloor) {
 
@@ -104,13 +108,22 @@ public class Lift {
 						doorsOpen = false;
 						doorsClosed = false;
 						doorsOpening = false;
-						liftOpenTimeout = 0f;
+						liftOpenTimer = 0f;
 
 					}
 				}
 
 			}
 
+
+			if (doorsOpening) {
+
+				doorsClosed = false;
+				doorsClosing = false;
+
+				LiftController.Instance.OpenDoors (this);
+				return;
+			}
 
 			if (doorsClosing) {
 
@@ -119,14 +132,7 @@ public class Lift {
 				return;
 			}
 
-			if (doorsOpening) {
-
-				doorsClosed = false;
-
-				LiftController.Instance.OpenDoors (this);
-				return;
-			}
-
+		
 
 		}
 		
@@ -134,7 +140,7 @@ public class Lift {
 	}
 
 
-	void CalculateTargetFloor () {
+	void CalculateTargetFloor (bool timer = false) {
 
         //Debug.Log("CALCULATE TARGET...");
 
@@ -187,15 +193,16 @@ public class Lift {
 
         }
         if (newFloor != targetFloor) {
-            SetTargetFloor(newFloor);
+            SetTargetFloor(newFloor, timer);
         }
 
     }
 
 
-	public void SetTargetFloor (int floor) {
+	public void SetTargetFloor (int floor, bool timer = false) {
 
-        Debug.Log("Set new target floor: " + floor);
+        Debug.Log("Set new target floor: " + floor + " " + timer + " " + doorsClosed);
+		Debug.Log ("CLOSED: " + doorsClosed + " OPEN: " + doorsClosed + " OPENING: " + doorsOpening + " CLOSING: " + doorsClosing);
 
 		this.targetFloor = floor;
 

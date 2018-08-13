@@ -411,6 +411,8 @@ public class LiftController : MonoBehaviourSingleton<LiftController> {
 			(float)lift.targetFloor, liftTransform.localPosition.z);
 
 		Debug.Log ("OPEN DOORS ON LIFT " + lift.id);
+
+		lift.arrivedOnFloorTimer = 3f;
 		
 		Display display = liftGo.GetComponent<Display> ();
 		display.currentSpeed = 0f;
