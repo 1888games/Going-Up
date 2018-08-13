@@ -1047,8 +1047,8 @@ MonoBehaviour:
   - {fileID: 114695259985273476}
   - {fileID: 114461327494411838}
   Filtered: 0
-  FoldedOut: 0
-  ScrollPosition: {x: 0, y: 0}
+  FoldedOut: 1
+  ScrollPosition: {x: 0, y: 19}
 --- !u!114 &114344489601187444
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2342,7 +2342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RandomVolume: 0
-  MinVolume: 0.67
+  MinVolume: 0.811
   MaxVolume: 1
   RandomizeDelay: 0
   InitialDelayMin: 0

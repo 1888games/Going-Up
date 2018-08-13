@@ -24,7 +24,7 @@ public class SoundController : MonoBehaviourSingleton<SoundController> {
 
 	void StartMusic () {
 
-		InAudio.Play (this.gameObject, music);
+		InAudio.Play (Camera.main.gameObject, music);
 	}
 	
 	// Update is called once per frame
@@ -38,7 +38,7 @@ public class SoundController : MonoBehaviourSingleton<SoundController> {
 
 		if (complainTimer > 2f) {
 
-			InAudio.Play (this.gameObject, complaints);
+			InAudio.Play (Camera.main.gameObject, complaints);
 			complainTimer = 0f;
 
 		}
@@ -47,13 +47,13 @@ public class SoundController : MonoBehaviourSingleton<SoundController> {
 
 	public void Ding () {
 
-		InAudio.Play (this.gameObject, ding);
+		InAudio.Play (Camera.main.gameObject, ding);
 
 	}
 	
 	public void Doors () {
 
-		InAudio.Play (this.gameObject, doors);
+		InAudio.Play (Camera.main.gameObject, doors);
 
 	}
 }
