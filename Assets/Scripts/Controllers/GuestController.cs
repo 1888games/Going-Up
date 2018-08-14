@@ -191,7 +191,10 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 		HotelController.Instance.ShowCorrectFloor ();
 		SpawnGuest(0);
 		HotelController.Instance.hotel.lifts[0].doorsOpening = true;
-
+		HotelController.Instance.selectionCylinder.SetCylinder (0);
+		
+		
+		
 			
        	 gameActive = true;
 
@@ -415,10 +418,12 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
 		LoseLife ();
 
 		if (guest.lift == null) {
-			
-			 guestGO.transform.DOMove(new Vector3(-4.5f, (float)guest.currentFloor, 0f), 2f)
-       		.OnComplete(() => DestroyGuest(guestGO, guest));
 
+			guestGO.transform.DOMove (new Vector3 (-4.5f, (float)guest.currentFloor, 0f), 2f)
+			  .OnComplete (() => DestroyGuest (guestGO, guest));
+
+		} else {
+			guest.guestInLiftWhenPatienceOut = true;
 		}
 
 
@@ -454,6 +459,11 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
         guests.Remove(guest);
         guestGameObjects.Remove(guestGO);
         guestToGameObjectMap.Remove(guest);
+		if (guest.guestInLiftWhenPatienceOut == false) {
+			guestCount [guest.currentFloor]--;
+			UpdateLeftPanel(guest.currentFloor);
+		}
+		guest = null;
         gameObjectToGuestMap.Remove(guestGO);
 
         SimplePool.Despawn(guestGO);
@@ -463,6 +473,7 @@ public class GuestController : MonoBehaviourSingleton<GuestController> {
     public void GuestArrivedInLift(GameObject guestGO, Guest guest, Lift lift) {
 
         guest.lift = lift;
+		guest.guestInLiftWhenPatienceOut = true;
         guestGO.transform.eulerAngles = Vector3.zero;
 
         guestCount[guest.currentFloor]--;

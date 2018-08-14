@@ -18,6 +18,7 @@ public class Guest {
 	public bool lostPatience = false;
 	public bool complained = false;
 	public float complainPoint = 0f;
+	public bool guestInLiftWhenPatienceOut = false;
   
 
     public FaceCanvas hud;
